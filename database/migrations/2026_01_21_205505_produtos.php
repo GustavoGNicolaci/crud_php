@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('produtos', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('nome');
             $table->text('descricao')->nullable();
             $table->decimal('preco', 8, 2);
             $table->integer('quantidade');
+            $table->string('imagem')->nullable();
+            $table->timestamps();
+            
+            $table->unsignedBigInteger('id_categoria');
+            $table->foreign('id_categoria')->references('id')->on('categorias')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
