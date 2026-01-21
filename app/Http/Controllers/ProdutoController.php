@@ -13,9 +13,8 @@ class ProdutoController extends Controller
     public function index()
     {
         $produtos = Produto::all();
-        return response()->json($produtos);
+        return view('produtos.index', compact('produtos'));
     }
-
 
     /**
      * Show the form for creating a new resource.
