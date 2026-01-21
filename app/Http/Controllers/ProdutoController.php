@@ -16,12 +16,13 @@ class ProdutoController extends Controller
         return response()->json($produtos);
     }
 
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return view('produtos.create');
     }
 
     /**
@@ -29,15 +30,29 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validação dos dados
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'descricao' => 'nullable|string',
+            'preco' => 'required|numeric|min:0',
+            'quantidade' => 'required|integer|min:0',
+        ]);
+
+        // Cria o produto
+        Produto::create($validated);
+
+        return redirect()->route('produtos.index')
+            ->with('success', 'Produto criado com sucesso!');
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $produto = Produto::findOrFail($id);
+        return view('produtos.show', compact('produto'));
     }
 
     /**
@@ -45,7 +60,8 @@ class ProdutoController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $produto = Produto::findOrFail($id);
+        return view('produtos.edit', compact('produto'));
     }
 
     /**
@@ -53,7 +69,21 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $produto = Produto::findOrFail($id);
+
+        // Validação dos dados
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'descricao' => 'nullable|string',
+            'preco' => 'required|numeric|min:0',
+            'quantidade' => 'required|integer|min:0',
+        ]);
+
+        // Atualiza o produto
+        $produto->update($validated);
+
+        return redirect()->route('produtos.index')
+            ->with('success', 'Produto atualizado com sucesso!');
     }
 
     /**
@@ -61,6 +91,10 @@ class ProdutoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $produto = Produto::findOrFail($id);
+        $produto->delete();
+
+        return redirect()->route('produtos.index')
+            ->with('success', 'Produto deletado com sucesso!');
     }
 }
